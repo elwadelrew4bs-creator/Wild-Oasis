@@ -46,6 +46,7 @@ const Discount = styled.div`
 function CabinRow({cabin}) {
   const {id:cabinId, name , image , maxCapacity , regularPrice , discount} = cabin
    const queryClient = useQueryClient()
+   const [showForm , setShowForm] = useState(false)
   const {isPending , mutate} = useMutation({
     mutationFn:deleteCabin,
     onSuccess:()=>{
@@ -57,6 +58,7 @@ function CabinRow({cabin}) {
     onError:(err)=>toast.error(err.message)
    })
   return (
+    <>
     <TableRow role="row">
       <Img src={image}/>
       <Cabin>{name}</Cabin>
@@ -64,11 +66,14 @@ function CabinRow({cabin}) {
       <Price>{regularPrice}</Price>
       <Discount>{discount}</Discount>
       <div>
-        <button>Edit</button>
+        <button onClick={()=>setShowForm((show)=>!show)}>Edit</button>
         <button onClick={()=>mutate(cabinId)} disabled={isPending}>Delete</button>
       </div>
     </TableRow>
+    {showForm && <CreateCabinForm cabinToEdit={cabin}/>}
+    </>
   )
 }
 
 export default CabinRow
+        

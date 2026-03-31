@@ -12,7 +12,13 @@ import toast from "react-hot-toast";
 import FormRow from "../../ui/FormRow";
 function CreateCabinForm() {
   const queryClient = useQueryClient();
-  const { register, handleSubmit, reset , getValues , formState: {errors}} = useForm();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    getValues,
+    formState: { errors },
+  } = useForm();
   const { isPending, mutate } = useMutation({
     mutationFn: createCabin,
     onSuccess: () => {
@@ -25,7 +31,7 @@ function CreateCabinForm() {
     onError: (err) => toast.error(err.message),
   });
   function onSubmit(data) {
-    mutate(data);
+    mutate({ ...data, image: data.image[0] });
   }
   function onError(errorss) {
     // console.log(errors);
@@ -41,10 +47,13 @@ function CreateCabinForm() {
             min: { value: 1, message: "Capacity must be at least 1" },
           })}
           disabled={isPending}
-          />
+        />
       </FormRow>
 
-      <FormRow label="Maximum capacity" errorMessage={errors?.maxCapacity?.message}>
+      <FormRow
+        label="Maximum capacity"
+        errorMessage={errors?.maxCapacity?.message}
+      >
         <Input
           type="number"
           id="maxCapacity"
@@ -53,10 +62,13 @@ function CreateCabinForm() {
             min: { value: 1, message: "Capacity must be at least 1" },
           })}
           disabled={isPending}
-          />
+        />
       </FormRow>
 
-      <FormRow label="Regular price" errorMessage={errors?.regularPrice?.message}>
+      <FormRow
+        label="Regular price"
+        errorMessage={errors?.regularPrice?.message}
+      >
         <Input
           type="number"
           id="regularPrice"
@@ -65,7 +77,7 @@ function CreateCabinForm() {
             min: { value: 1, message: "Price must be at least 1" },
           })}
           disabled={isPending}
-          />
+        />
       </FormRow>
 
       <FormRow label="Discount" errorMessage={errors?.discount?.message}>
@@ -76,13 +88,17 @@ function CreateCabinForm() {
           {...register("discount", {
             required: "This field is required",
             validate: (value) =>
-              getValues("regularPrice") >= value || "Discount must be less than regular price",
+              Number(getValues("regularPrice")) >= Number(value) ||
+              "Discount must be less than regular price",
           })}
           disabled={isPending}
-          />
+        />
       </FormRow>
 
-      <FormRow label="Description for website" errorMessage={errors?.description?.message}>
+      <FormRow
+        label="Description for website"
+        errorMessage={errors?.description?.message}
+      >
         <Textarea
           type="number"
           id="description"
@@ -96,7 +112,7 @@ function CreateCabinForm() {
         <FileInput
           id="image"
           accept="image/*"
-          {...register("image")}
+          {...register("image", { required: "This field is required" })}
           type="file"
           disabled={isPending}
         />
