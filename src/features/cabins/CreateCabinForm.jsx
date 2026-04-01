@@ -6,14 +6,12 @@ import Button from "../../ui/Button";
 import FileInput from "../../ui/FileInput";
 import Textarea from "../../ui/Textarea";
 import { useForm } from "react-hook-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createEditCabin } from "../../services/apiCabins";
-import toast from "react-hot-toast";
+import { useCreateCabin } from "./useCreateCabin";
+import { useEditCabin } from "./useEditCabin";
 import FormRow from "../../ui/FormRow";
 function CreateCabinForm({ cabinToEdit = {} }) {
   const { id: editId, ...editValues } = cabinToEdit;
   const isEditSession = Boolean(editId);
-  const queryClient = useQueryClient();
   const {
     register,
     handleSubmit,
@@ -23,33 +21,13 @@ function CreateCabinForm({ cabinToEdit = {} }) {
   } = useForm({
     defaultValues: isEditSession ? editValues : {},
   });
-  const { isPending: isCreating, mutate: createCabin } = useMutation({
-    mutationFn: (newCabin) => createEditCabin(newCabin),
-    onSuccess: () => {
-      toast.success("Cabin created successfully");
-      queryClient.invalidateQueries({
-        queryKey: ["cabins"],
-      });
-      reset();
-    },
-    onError: (err) => toast.error(err.message),
-  });
-  const { isPending: isEditing, mutate: editCabin } = useMutation({
-    mutationFn: (data) => createEditCabin(data, editId),
-    onSuccess: () => {
-      toast.success("Cabin edited successfully");
-      queryClient.invalidateQueries({
-        queryKey: ["cabins"],
-      });
-      reset();
-    },
-    onError: (err) => toast.error(err.message),
-  });
+const { isCreating, createCabin } = useCreateCabin();
+const { isEditing, editCabin } = useEditCabin();
   function onSubmit(data) {
     const image = typeof data.image === "string" ? data.image : data.image[0];
     isEditSession
       ? editCabin({ ...data, image })
-      : createCabin({ ...data, image });
+      : createCabin({ ...data, image } , {onSuccess: () => reset()} );
   }
   function onError(errors) {
     console.log(errors);
