@@ -26,7 +26,10 @@ const { isEditing, editCabin } = useEditCabin();
   function onSubmit(data) {
     const image = typeof data.image === "string" ? data.image : data.image[0];
     isEditSession
-      ? editCabin({ ...data, image })
+      ?editCabin(
+  { newCabinData: { ...data, image }, id: editId },
+  { onSuccess: () => reset() }
+)
       : createCabin({ ...data, image } , {onSuccess: () => reset()} );
   }
   function onError(errors) {
