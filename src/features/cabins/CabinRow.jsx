@@ -3,7 +3,6 @@ import { HiSquare2Stack } from "react-icons/hi2";
 import { MdModeEdit, MdDeleteForever } from "react-icons/md";
 import { useDeleteCabin } from "./useDeleteCabin";
 import { useCreateCabin } from "./useCreateCabin";
-import React from "react";
 import Modal from "../../ui/Modal";
 import CreateCabinForm from "./CreateCabinForm";
 import ConfirmDelete from "../../ui/ConfirmDelete";
