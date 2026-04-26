@@ -11,6 +11,9 @@ node_modules
 dist
 dist-ssr
 *.local
+results.json
+src/features/bookings/BookingTable_p-v.jsx
+src/pages/Bookings_p-v.jsx
 
 # Editor directories and files
 .vscode/*
